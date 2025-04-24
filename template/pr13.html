@@ -1,0 +1,200 @@
+<html>
+<style>
+  /* Hide scrollbars for the scroll container in various browsers */
+  #scroll-container {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  #scroll-container::-webkit-scrollbar {
+    width: 0px; /* Chrome, Safari, and Opera */
+    background: transparent;
+  }
+</style>
+
+<div style="position: fixed; top: 50%; left: 0; transform: translateY(-50%); height: 100%; z-index: 10; display: flex; align-items: center;">
+    <img src="side.png" alt="Side Image" style="height: 100%;">
+    <div id="scroll-container" style="margin-left: 12px; background: #23232300; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); padding: 0; max-height: 90vh; overflow: auto;">
+      <div style="display: flex; font-family: 'Fira Mono', monospace; font-size: 16px; color: #d4d4d4;">
+        <pre id="line-numbers" style="margin: 0; padding: 16px 8px 16px 16px; background: #23232300; text-align: right; user-select: none; color: #888; min-width: 2em;"></pre>
+        <pre id="xml-code" style="margin: 0; padding: 16px 16px 16px 0; background: #23232300; white-space: pre; overflow: auto; border-radius: 8px;"></pre>
+      </div>
+    </div>
+  </div>
+  
+  <img src="bottom-right.png" alt="Bottom Right Image" style="position: fixed; bottom: 0; right: 0; height: 23px; z-index: 1;">
+  <style>
+    body {
+      background-color: #1e1e1e;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 23px;
+      background: #313131fd; /* a little gray */
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+  <img src="side right.png" alt="Side Right Image" style="position: fixed; right: 0; bottom: 20px; transform: translateY(0); height: calc(100% - 20px); z-index: 10;">
+  <img src="top.png" alt="Top Center Image" style="position: fixed; top: 0; left:1000px; transform: translateX(-50%); height: 40px; z-index: 11;">
+  <script>
+  (function() {
+    const rawXml = `<?xml version="1.0" encoding="utf-8"?>
+PR-13
+13 Develop a program to implement Progress Bar.
+XML Code
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <!-- TextView for Progress Dialog title -->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="ProgressDialog"
+        android:textSize="24sp"
+        android:layout_marginBottom="30dp"/>
+
+    <!-- Button to trigger progress bar -->
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Download"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"/>
+
+</LinearLayout>
+Java Code
+package com.example.pr13_progressbar;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    Button btn;
+    ProgressBar progressBar;
+    int counter = 0;
+    int max = 100;
+    Handler handler = new Handler();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btn = findViewById(R.id.button);
+        btn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        // Show progress bar in an AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Android Developers");
+        builder.setMessage("Downloading File...");
+
+        // Create a custom progress bar
+        ProgressBar progressBar = new ProgressBar(MainActivity.this);
+        progressBar.setIndeterminate(false);
+        progressBar.setMax(max);
+        builder.setView(progressBar);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Simulate a downloading task
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (counter < max) {
+                    counter++;
+
+                    // Update the progress bar on the UI thread
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setProgress(counter);
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(100); // Simulate a delay (for demo purposes)
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // Dismiss dialog when download is complete
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        Toast.makeText(MainActivity.this, "Download Complete!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).start();
+    }
+}
+
+
+
+
+
+
+
+`;
+  
+    function escapeHTML(str) {
+      return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+    }
+  
+    const code = document.getElementById('xml-code');
+    code.innerHTML = escapeHTML(rawXml);
+  
+    const lines = rawXml.split('\n').length;
+    const numbers = Array.from({length: lines}, (_, i) => i + 1).join('\n');
+    document.getElementById('line-numbers').textContent = numbers;
+  
+    // Optional: Sync scroll
+    const scrollContainer = document.getElementById('scroll-container');
+    const lineNumbers = document.getElementById('line-numbers');
+    scrollContainer.addEventListener('scroll', () => {
+      lineNumbers.scrollTop = scrollContainer.scrollTop;
+    });
+  })();
+  </script>
+<button id="apkButton" style="position: fixed; bottom: 3pc; right: 3pc; z-index: 50;">apk</button>
+<script>
+  document.getElementById('apkButton').addEventListener('click', function() {
+    var tempLink = document.createElement('a');
+    tempLink.href = 'pr2.apk';
+    tempLink.download = 'pr2.apk';
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    document.body.removeChild(tempLink);
+  });
+</script>
+
+
+</html>
