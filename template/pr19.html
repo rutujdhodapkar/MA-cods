@@ -1,0 +1,287 @@
+<html>
+<style>
+  /* Hide scrollbars for the scroll container in various browsers */
+  #scroll-container {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  #scroll-container::-webkit-scrollbar {
+    width: 0px; /* Chrome, Safari, and Opera */
+    background: transparent;
+  }
+</style>
+
+<div style="position: fixed; top: 50%; left: 0; transform: translateY(-50%); height: 100%; z-index: 10; display: flex; align-items: center;">
+    <img src="side.png" alt="Side Image" style="height: 100%;">
+    <div id="scroll-container" style="margin-left: 12px; background: #23232300; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); padding: 0; max-height: 90vh; overflow: auto;">
+      <div style="display: flex; font-family: 'Fira Mono', monospace; font-size: 16px; color: #d4d4d4;">
+        <pre id="line-numbers" style="margin: 0; padding: 16px 8px 16px 16px; background: #23232300; text-align: right; user-select: none; color: #888; min-width: 2em;"></pre>
+        <pre id="xml-code" style="margin: 0; padding: 16px 16px 16px 0; background: #23232300; white-space: pre; overflow: auto; border-radius: 8px;"></pre>
+      </div>
+    </div>
+  </div>
+  
+  <img src="bottom-right.png" alt="Bottom Right Image" style="position: fixed; bottom: 0; right: 0; height: 23px; z-index: 1;">
+  <style>
+    body {
+      background-color: #1e1e1e;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 23px;
+      background: #313131fd; /* a little gray */
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+  <img src="side right.png" alt="Side Right Image" style="position: fixed; right: 0; bottom: 20px; transform: translateY(0); height: calc(100% - 20px); z-index: 10;">
+  <img src="top.png" alt="Top Center Image" style="position: fixed; top: 0; left:1000px; transform: translateX(-50%); height: 40px; z-index: 11;">
+  <script>
+  (function() {
+    const rawXml = `<?xml version="1.0" encoding="utf-8"?>
+19. Develop a program to demonstrate any sample system or custom broadcast message.
+XML Code
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dynamic Battery Broadcast App"
+        android:textSize="24sp"
+        android:layout_marginBottom="50sp"
+        android:gravity="center"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Battery:"
+        android:textSize="24sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:gravity="center"
+        tools:ignore="HardcodedText" />
+</LinearLayout>
+
+
+
+
+MainActivity.java
+
+package com.example.dynamicboradcast;
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+    BatteryChange bc;
+    TextView tv;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        tv = findViewById(R.id.txt);
+        bc = new BatteryChange(tv);
+        IntentFilter infilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(bc, infilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(bc);
+    }
+}
+
+BatteryChange.java
+
+package com.example.dynamicboradcast;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.BatteryManager;
+import android.widget.TextView;
+
+public class BatteryChange extends BroadcastReceiver {
+    TextView tv;
+
+    public BatteryChange(TextView tv) {
+        this.tv = tv;
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        int percentage = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        if (percentage != -1) {
+            tv.setText("Battery: " + percentage + "%");
+        }
+    }
+}
+
+19. Develop a program to demonstrate any sample system or custom broadcast message.
+XML Code
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Airplane Mode Toggle"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <!-- ToggleButton to simulate Airplane Mode toggle -->
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="Airplane Mode ON"
+        android:textOff="Airplane Mode OFF"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp" />
+
+</LinearLayout>
+
+
+Java Code
+
+package com.example.pr19_broadcast_message;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.widget.CompoundButton;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import android.widget.ToggleButton;
+
+public class MainActivity extends AppCompatActivity {
+
+    ToggleButton toggleButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        toggleButton = findViewById(R.id.toggleButton);
+
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+
+                    Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
+                    startActivity(intent);
+
+                    Toast.makeText(MainActivity.this, "Opening Airplane Mode settings", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
+                    startActivity(intent);
+
+                    Toast.makeText(MainActivity.this, "Opening Airplane Mode settings", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}
+
+MyReceiver.java
+
+package com.example.pr19_broadcast_message;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.provider.Settings;
+import android.widget.Toast;
+
+public class MyReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        // Check if the broadcast is about Airplane Mode change
+        if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction())) {
+            boolean isAirplaneModeOn = intent.getBooleanExtra("state", true);
+
+            // Show a Toast message based on Airplane Mode state
+            if (isAirplaneModeOn) {
+                Toast.makeText(context, "Airplane Mode is ON", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Airplane Mode is OFF", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+`;
+  
+    function escapeHTML(str) {
+      return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+    }
+  
+    const code = document.getElementById('xml-code');
+    code.innerHTML = escapeHTML(rawXml);
+  
+    const lines = rawXml.split('\n').length;
+    const numbers = Array.from({length: lines}, (_, i) => i + 1).join('\n');
+    document.getElementById('line-numbers').textContent = numbers;
+  
+    // Optional: Sync scroll
+    const scrollContainer = document.getElementById('scroll-container');
+    const lineNumbers = document.getElementById('line-numbers');
+    scrollContainer.addEventListener('scroll', () => {
+      lineNumbers.scrollTop = scrollContainer.scrollTop;
+    });
+  })();
+  </script>
+<button id="apkButton" style="position: fixed; bottom: 3pc; right: 3pc; z-index: 50;">apk</button>
+<script>
+  document.getElementById('apkButton').addEventListener('click', function() {
+    var tempLink = document.createElement('a');
+    tempLink.href = 'pr2.apk';
+    tempLink.download = 'pr2.apk';
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    document.body.removeChild(tempLink);
+  });
+</script>
+
+
+</html>
